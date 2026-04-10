@@ -3,6 +3,7 @@ import SectionTitle from '../components/SectionTitle'
 import { Link } from 'react-router-dom'
 import { useProductStore } from '../store/useProductStore'
 import "./scss/cart.scss"
+import { useState } from 'react'
 
 
 const Cart = () => {

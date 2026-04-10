@@ -213,20 +213,28 @@ export const useProductStore = create(
 
             const newOrder = {
                 id: Date.now(),
-                date:new Date().toLocaleString(),
-                items:order.items,
+                date: new Date().toLocaleString(),
+                items: order.items,
                 price: order.total,
                 status: "결제완료"
             }
 
             const updateOrder = [...orderPrev, newOrder]
 
-            set ({
+            set({
                 orderLists: updateOrder,
-                cartCount:0,
+                cartCount: 0,
                 selectedCoupon: null,
                 cartItems: []
             })
+        },
+
+        onCancleOrder: (orderId) => {
+            const prevvOrder = get().orderLists;
+            const updateOrder = prevvOrder.map((order) =>
+                order.id === orderId ? { ...order, status: "취소신청중" } : order
+            )
+            set({orderLists: updateOrder})
         },
 
         // ### 찜하기
@@ -246,17 +254,17 @@ export const useProductStore = create(
         },
 
         onRemoveWish: (id) => {
-            const updateWish = get().wishLists.filter((w) => !(w.id == id))
+            const updateWish = get().WishLists.filter((w) => !(w.id == id))
             set({
-                wishLists: updateWish
+                WishLists: updateWish
             })
         }
     }),
         {
             name: "product-storage",
             partialize: (state) => ({
-                cartItems:state.cartItems,
-                wishLists: state.wishLists,
+                cartItems: state.cartItems,
+                WishLists: state.WishLists,
                 cartCount: state.cartCount,
                 totalPrice: state.totalPrice,
                 orderLists: state.orderLists

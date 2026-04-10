@@ -19,10 +19,17 @@ import ProductDetail from './pages/ProductDetail'
 import { useProductStore } from './store/useProductStore'
 
 import ProductList from './components/ProductList'
+import { useAuthStore } from './store/useAuthStore'
 
 function App() {
 
   const { items, onFetchItems } = useProductStore();
+  const {initAuth} = useAuthStore();
+  
+  useEffect(()=>{
+    initAuth();
+  },[initAuth])
+
   useEffect(() => {
     onFetchItems()
   }, [items])

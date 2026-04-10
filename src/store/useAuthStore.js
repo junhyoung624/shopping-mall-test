@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { create } from "zustand";
 import { auth, db, googleProvider } from "../firebase/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -9,13 +9,31 @@ export const useAuthStore = create((set, get) => ({
     // 로그인, 회원가입
     user: null,
 
+    // firebase 로그인(앱 최초 실행)
+    // 자동 로그인 방지 
+    initAuth: () => {
+        onAuthStateChanged(auth, async (firebaseUser) => {
+            if(firebaseUser) {
+                if(!firebaseUser.emailVerified){
+                    alert("이메일 인증을 먼저해주세요!!!")
+                    await signOut(auth);
+                    set({user: null})
+                    return
+                }
+            }
+        })
+    },
+
     // 2. 메서드
     // 회원가입
     onMember: async ({ uName, nickname, email, password, phone, profile }) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             console.log(userCredential);
-            const user = userCredential.user
+            const user = userCredential.user;
+
+            // 이메일 인증 메일 보내기 
+            await sendEmailVerification(user)
             // Firestore에 저장하기
             // 1단계 - 저장 위치 지정
             // doc(db, "컬렉션", 문서);
@@ -32,8 +50,8 @@ export const useAuthStore = create((set, get) => ({
             // 3단계 - firestore에 데이터 저장
             await setDoc(userRef, userInfo);
             // 4단계 - zustand에 상태저장
-            set({ user: userInfo });
-            alert("회원가입 성공")
+            // set({ user: userInfo });
+            alert("회원가입 성공! 이메일 인증을 완료해 주세요")
         }
         catch (err) {
             alert(err.message)
@@ -57,7 +75,7 @@ export const useAuthStore = create((set, get) => ({
             // 구글 로그인 팝업을 띄워서 사용자로부터 로그인, 그 결과를 저장하기
             const result = await signInWithPopup(auth, googleProvider);
             console.log(result);
-            
+
             // 
             const user = result.user
             // 데이터베이스에 저장하기
@@ -65,19 +83,19 @@ export const useAuthStore = create((set, get) => ({
             // 회원인지 아닌지 체크하기
             const userDoc = await getDoc(userRef);
             // 데이터가 없으면 회원가입이 안됨 있으면 회원가입된상태
-            if(!userDoc.exists()) {
+            if (!userDoc.exists()) {
                 const userInfo = {
                     uid: user.uid,
-                    email:user.email,
-                    name:user.displayName,
+                    email: user.email,
+                    name: user.displayName,
                     nickname: "",
                     phone: user.phoneNumber,
                     profile: ""
                 }
                 await setDoc(userRef, userInfo);
-                set({user: userInfo})
+                set({ user: userInfo })
             } else {
-                set({user: userDoc.data()})
+                set({ user: userDoc.data() })
             }
         } catch (err) {
             alert(err.message);

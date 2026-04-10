@@ -3,9 +3,11 @@ import SectionTitle from '../components/SectionTitle'
 import { useProductStore } from '../store/useProductStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PaymentModal from '../components/PaymentModal';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Payment = () => {
   const {totalPrice, coupons, selectedCoupon, finalPrice, onSelectedCoupon, onFinalPrice, cartItems, onAddOrder} = useProductStore();
+  const {user} = useAuthStore();
 
   const navigate = useNavigate();
   // useLocation() 현재 페이지의 url+state정보를 가져올 때 사용하는 훅
@@ -19,6 +21,12 @@ const Payment = () => {
 
   // 결제하기를 클릭하면 poppup을 보여줄 메서드
   const handlePayment = () => {
+    // 결제하기를 클릭했을 때 로그인 상태인지를 체크해서
+    // 로그인 상태가 아니면 로그인화면으로 이동
+    if(!user) {
+      alert("로그인 후 이용하세요")
+      navigate("/login")
+    }
     setShowPay(true)
   }
 
