@@ -1,0 +1,37 @@
+.inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+section {
+  padding: 50px 0;
+}
+
+.women-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.women-list .women-left {
+  width: 45%;
+}
+.women-list .women-right {
+  width: 50%;
+}
+
+.sub-page-wrap {
+  padding: 80px 0;
+}
+
+.user-info-wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 50px;
+}
+.user-info-wrap .user-info-left {
+  border-right: 1px solid #ccc;
+}

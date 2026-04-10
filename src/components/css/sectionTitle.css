@@ -1,0 +1,9 @@
+.section-title-box {
+  text-align: center;
+}
+.section-title-box .section-title {
+  font-size: 42px;
+}
+.section-title-box .section-sub-title {
+  color: #8d8d8d;
+}

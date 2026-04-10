@@ -1,0 +1,14 @@
+.sub-goods-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.sub-goods-list li a .img-box {
+  border: 1px solid #ccc;
+  aspect-ratio: 1/1;
+  padding: 40px;
+}
+.sub-goods-list li a .img-box img {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
