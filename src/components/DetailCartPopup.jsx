@@ -1,6 +1,6 @@
 
 import { Link} from 'react-router-dom'
-import "./scss/popup.scss";
+import "./scss/Popup.scss";
 
 const DetailCartPopup = ({onClose}) => {
   return (
